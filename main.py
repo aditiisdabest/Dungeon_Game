@@ -1,10 +1,12 @@
-# Version 2 of Dungeon_Game
+# Version 3 of Dungeon_Game
 
 # Global Variables
 user_name = input("What is your name, traveler? ")
 game_enemy = "The Shadow Beast"
 game_role = "Escaped Prisoner"
 game_goal = "freeedom"
+
+print("Hi")
 
 class Room:
     
