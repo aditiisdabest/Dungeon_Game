@@ -1,10 +1,11 @@
-# Version 2 of Dungeon_Game
+# Version 3 of Dungeon_Game
 
 # Global Variables
 user_name = input("What is your name, traveler? ")
 game_enemy = "The Shadow Beast"
 game_role = "Escaped Prisoner"
 game_goal = "freeedom"
+
 
 class Room:
     
@@ -18,7 +19,7 @@ class Room:
 
 class Player:
     
-    def __init__(self, player_name, enemy, role, goal, map_castle):
+    def __init__(self, player_name, enemy, role, goal, map_dungeon):
         self.player_name = player_name
         self.enemy = enemy
         self.role = role
