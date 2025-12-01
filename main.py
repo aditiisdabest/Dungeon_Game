@@ -71,6 +71,32 @@ class Player:
         return self.map[self.row][self.col]
 
 
+class Enemy: # includes inheritance (Parent/Base Class)
+
+    def __init__(self, enemy_name, location, damage = 1):
+        self.enemy_name = enemy_name
+        self.enemy_location = location
+        self.player_damage = damage
+
+    def enemy_encounter(self, player):
+        print(f"You encounter {self.enemy_name}!")
+        player.lives -= self.player_damage
+        print(f"You lose {self.player_damage} life. Lives remaining: {player.lives}")
+
+
+class Shadow_Beast(Enemy): # includes inheritance (Child Class)
+
+    def __init__(self, name, location, fright_level = 5):
+        # uses inherited damage
+        Enemy.__init__(self, name, location) # Calls the parent for self, name, location
+        self.fright_level = fright_level
+
+    def shadow_beast_encounter(self, player):
+        print(f"A terrifying {self.enemy_name} appears! Fright level: {self.fright_level}")
+        Enemy.enemy_encounter(self, player)
+        print("You barely escape its shadowy grasp!")
+
+
 #Room descriptions
 entrance_des = """It is a damp stone chamber, torches flickering on the walls.
 Chains rattle somewhere in the darkness. The air is cold and heavy."""
@@ -120,8 +146,14 @@ map_dungeon = [
 ]
 
 
-# Create the player
+# Randomize shadow beast location in dungeon
+possible_enemy_position = [(row, col) for row in range(3) for col in range(3)
+                            if (row, col) not in [(0,0), (2,2)]]
+enemy_location = random.choice(possible_enemy_position)
+
+# Create the player and Shadow Beast objects
 player = Player(user_name, lives = 10, map_dungeon = map_dungeon)
+shadow_beast = Shadow_Beast("Shadow Beast", enemy_location)
 
 
 # Introduction message
@@ -143,6 +175,11 @@ while True:
 
     # Update current room inside of the loop at the start
     current = player.current_room()
+
+    #check shadow beast encounter
+    if (player.row, player.col) == shadow_beast.enemy_location:
+        shadow_beast.enemy_encounter(player)
+        shadow_beast.enemy_location = (-1, -1) # Beast disappears
 
     # Check if player ran out of lives
     if player.lives <= 0:
