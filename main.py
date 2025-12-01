@@ -1,12 +1,13 @@
 # Version 3 of Dungeon_Game
 
-# Global Variables
+
+# Import and Global Variables
+import random
 user_name = input("What is your name, traveler? ")
 game_enemy = "The Shadow Beast"
-game_role = "Escaped Prisoner"
-game_goal = "freeedom"
+game_role = "Dungeon Escaped Prisoner"
+game_goal = "freedom"
 
-print("Hi")
 
 class Room:
     
@@ -20,17 +21,20 @@ class Room:
 
 class Player:
     
-    def __init__(self, player_name, enemy, role, goal, map_castle):
+    def __init__(self, player_name, lives, map_dungeon):
         self.player_name = player_name
-        self.enemy = enemy
-        self.role = role
-        self.goal = goal
+        self.lives = lives
         self.map = map_dungeon
         # starting position (top-left)
         self.row = 0
         self.col = 0
 
     def move(self, direction):
+
+        if self.lives <= 0:
+            print("You have no lives left! GAME OVER!")
+            return False
+
         if direction == "up":
             if self.row > 0:
                 self.row -= 1
@@ -56,6 +60,12 @@ class Player:
                 print("\nYou can't squeeze through the cracks in the wall.")
         else:
             print("\nThat direction doesn't exist in this dungeon...")
+            return False
+
+        self.lives -= 1 
+        print(f"{self.player_name} moves to {self.current_room().name}. Lives left: {self.lives}")
+        return True
+
 
     def current_room(self):
         return self.map[self.row][self.col]
@@ -111,13 +121,14 @@ map_dungeon = [
 
 
 # Create the player
-player = Player(user_name, game_enemy, game_role, game_goal, map_dungeon)
+player = Player(user_name, lives = 10, map_dungeon = map_dungeon)
 
 
 # Introduction message
 print(f"\nWelcome, {game_role} {user_name}.")
 print(f"\nYou are stuck in a dungeon with 3 floors each containing 3 unique rooms.")
 print(f"You must escape the dungeon by making your way down to the first floor.")
+print("You have 10 lives. Each move costs you 1 life so choose wisely")
 print(f"HURRY! before {game_enemy} finds you...\n")
 
 
@@ -127,8 +138,30 @@ print(f"You wake up in in the first room of the 3rd floor: {current.name}")
 print(current.description)
 
 
-# main movement code
+
 while True:
+
+    # Update current room inside of the loop at the start
+    current = player.current_room()
+
+    # Check if player ran out of lives
+    if player.lives <= 0:
+        print("\nYou have run out of lives! The dungeon claims you...")
+        break
+
+    # Check if player reached the exit
+    if current == exit_room:
+        if player.lives >= 1:
+            player.lives -=1
+            print(f"\nYou spend one life to open the exit door...and escape!")
+            print(f"Lives remaining:{player.lives}")
+            print(f"Congratulations! You survived the dungeon and attained {game_goal}!")
+            break
+        else:
+            print("\nYou don't have enough lives to escape! You await your fate as the Shadow Beast approaches.")
+            break
+
+    # main movement code
     print("\n Dungeon Movement")
     print("Move: up, down, left, right")
     print("Type 'quit' to stop your escape")
@@ -137,10 +170,12 @@ while True:
         print("You sit down and await your fate... the Beast approaches...")
         break
     elif move in ["up", "down", "left", "right"]:
-        player.move(move)
-        current = player.current_room()
-        print(f"\nYou are now in: {current.name}")
-        print(current.description)
+        moved = player.move(move) 
+        if moved:
+            # Show current room
+            current = player.current_room()
+            print(f"\nYou are now in: {current.name}")
+            print(current.description)
     else:
         print("\nThat direction doesn't exist in this dungeon...")
         
