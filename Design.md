@@ -10,9 +10,7 @@ The dungeon consists of **3 floors**, each with **3 unique rooms**:
 | MAP    |  Room1   | Room3    | Room3    |
 |-----|-----|-----|-----|
 | **Floor3**    |  entrance   | Cellblock   |  Armory   |
-|-----|-----|-----|-----|
 | **Floor2**    |  crypt   | altar   |  library   |
-|-----|-----|-----|-----|
 | **Floor1**    |  treasure   | collapsed_room   |  exit room   |
 
 **Room Objects:**  
